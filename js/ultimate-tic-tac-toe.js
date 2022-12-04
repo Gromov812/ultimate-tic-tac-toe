@@ -261,7 +261,8 @@ playerX.push(+(this.getAttribute('block')))
 this.setAttribute('ready', 'false');
 this.innerHTML = 'O'
 player0[this.getAttribute('block')]['comb'].push(this.value)
-counter--;
+counter--
+//playeriX[this.getAttribute('block')]['counter']--;
 
   if (player0[this.getAttribute('block')]['comb'].length > 2 && compare(winCombs, player0[this.getAttribute('block')]['comb'])) {
    document.querySelector(`[class="row active"][value="${this.getAttribute('block')}"]`).innerHTML = 'O';

@@ -240,11 +240,11 @@ document.querySelector(`[class="row active"][value="${this.getAttribute('block')
 
 /* Check X for possibilaty make a move and then check for win */
 
- if (!(playeriX[this.getAttribute('block')]['counter'] % 2) && !winner && this.getAttribute('ready') == 'true') {
+ if (!(counter % 2) && !winner && this.getAttribute('ready') == 'true') {
 this.setAttribute('ready', 'false');
 this.innerHTML = 'X'
 playeriX[this.getAttribute('block')]['comb'].push(this.value);
-playeriX[this.getAttribute('block')]['counter']++;
+counter++;
 
   if (playeriX[this.getAttribute('block')]['comb'].length > 2 && compare(winCombs, playeriX[this.getAttribute('block')]['comb'])) {
 document.querySelector(`[class="row active"][value="${this.getAttribute('block')}"]`).innerHTML = 'X';
@@ -257,12 +257,11 @@ playerX.push(+(this.getAttribute('block')))
 
 /* Check O for possibilaty make a move and then check for win */
 
- else if ((playeriX[this.getAttribute('block')]['counter'] % 2) && !winner && this.getAttribute('ready') == 'true') {
+ else if ((counter % 2) && !winner && this.getAttribute('ready') == 'true') {
 this.setAttribute('ready', 'false');
 this.innerHTML = 'O'
 player0[this.getAttribute('block')]['comb'].push(this.value)
-
-playeriX[this.getAttribute('block')]['counter']--;
+counter--;
 
   if (player0[this.getAttribute('block')]['comb'].length > 2 && compare(winCombs, player0[this.getAttribute('block')]['comb'])) {
    document.querySelector(`[class="row active"][value="${this.getAttribute('block')}"]`).innerHTML = 'O';

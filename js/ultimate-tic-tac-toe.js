@@ -13,6 +13,9 @@ let p1 = document.querySelector('#p1');
 let p2 = document.querySelector('#p2');
 let blocks = document.querySelectorAll('.row');
 let cells = document.querySelectorAll('.inner--cell');
+let nextField;
+let firstMove = true;
+
 
 let [playerX, playerO, counter, winner,score] = [[],[],0,false,[0,0]];
 
@@ -115,7 +118,9 @@ let playeriX = {
   }
 }
 
-
+if (nextField == undefined) {
+  container.classList.add('box-shadow');
+}
 
 let block0 = document.querySelectorAll('[block="0"]');
 let block1 = document.querySelectorAll('[block="1"]');
@@ -223,58 +228,110 @@ function compare(winCombs, playerComb){
 }
 
 
-
+// for (let el of cells) {
+//   el.innerHTML = `${el.getAttribute('block')}`
+// }
 
 
 /* Function of gameplay */
 
 function gamePlay() {
 
+  let block = document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`);
+  let blockNumber = this.getAttribute('block');
+
   /* Check for draw */ 
 
- if((player0[this.getAttribute('block')]['comb'].length + playeriX[this.getAttribute('block')]['comb'].length) > 7 && !player0[this.getAttribute('block')]['winner'] && !winner){
-document.querySelector(`[class="row active"][value="${this.getAttribute('block')}"]`).setAttribute('ready', false);
-document.querySelector(`[class="row active"][value="${this.getAttribute('block')}"]`).innerHTML = 'D';
+ if((player0[blockNumber]['comb'].length + playeriX[blockNumber]['comb'].length) > 7 && !player0[blockNumber]['winner'] && !winner){
+  block.setAttribute('ready', false);
+  block.innerHTML = 'D';
  }
 
 
 /* Check X for possibilaty make a move and then check for win */
 
- if (!(counter % 2) && !winner && this.getAttribute('ready') == 'true') {
+ if (!(counter % 2) && !winner && this.getAttribute('ready') == 'true' && (nextField == blockNumber || firstMove) && !!block.getAttribute('ready')) {
+firstMove = false;
 this.setAttribute('ready', 'false');
 this.innerHTML = 'X'
-playeriX[this.getAttribute('block')]['comb'].push(this.value);
+playeriX[blockNumber]['comb'].push(this.value);
 counter++;
+nextField = this.value;
 
-  if (playeriX[this.getAttribute('block')]['comb'].length > 2 && compare(winCombs, playeriX[this.getAttribute('block')]['comb'])) {
-document.querySelector(`[class="row active"][value="${this.getAttribute('block')}"]`).innerHTML = 'X';
-playeriX[this.getAttribute('block')]['winner'] = true;
-playerX.push(+(this.getAttribute('block')))
-
+if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('ready') != 'false') {
+  document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.add('box-shadow');
+  container.classList.remove('box-shadow');
 
   }
+  if (this.getAttribute('value') != this.getAttribute('block')) {
+  document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
+   }
+
+console.log(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')));
+
+
+  if (playeriX[blockNumber]['comb'].length > 2 && compare(winCombs, playeriX[blockNumber]['comb'])) {
+    block.setAttribute('ready', false);
+    block.innerHTML = 'X';
+    playeriX[blockNumber]['winner'] = true;
+    playerX.push(+(blockNumber))
+    document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.remove('box-shadow');
+    container.classList.add('box-shadow');
+  }
+  if ([...playerO, ...playerX].includes(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')))) {
+    container.classList.add('box-shadow');
+    nextField = undefined;
+    firstMove = true;
+   }
  }  
+
 
 /* Check O for possibilaty make a move and then check for win */
 
- else if ((counter % 2) && !winner && this.getAttribute('ready') == 'true') {
+ else if ((counter % 2) && !winner && this.getAttribute('ready') == 'true'&& (nextField == blockNumber || firstMove) && !!block.getAttribute('ready')) {
+firstMove = false;
 this.setAttribute('ready', 'false');
 this.innerHTML = 'O'
-player0[this.getAttribute('block')]['comb'].push(this.value)
+player0[blockNumber]['comb'].push(this.value)
 counter--
+nextField = this.value;
+
+if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('ready') != 'false') {
+  document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.add('box-shadow');
+  container.classList.remove('box-shadow');
+
+  }
+  if (this.getAttribute('value') != this.getAttribute('block')) {
+  document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
+   }
+
+console.log(+block.getAttribute('value'));
+
 //playeriX[this.getAttribute('block')]['counter']--;
 
-  if (player0[this.getAttribute('block')]['comb'].length > 2 && compare(winCombs, player0[this.getAttribute('block')]['comb'])) {
-   document.querySelector(`[class="row active"][value="${this.getAttribute('block')}"]`).innerHTML = 'O';
-   player0[this.getAttribute('block')]['winner'] = true;
-   playerO.push(+(this.getAttribute('block')))
-  
-  
-  }
-  
+  if (player0[blockNumber]['comb'].length > 2 && compare(winCombs, player0[blockNumber]['comb'])) {
+   block.setAttribute('ready', false);
+   block.innerHTML = 'O';
+   player0[blockNumber]['winner'] = true;
+   playerO.push(+(blockNumber))
+   document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.remove('box-shadow');
+   container.classList.add('box-shadow');
+
+
+  } 
+  if ([...playerO, ...playerX].includes(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')))) {
+    container.classList.add('box-shadow');
+    nextField = undefined;
+      firstMove = true;
+    }
  }
 }
 
+function checkForAvaliable () {
+  
+}
+// nextField == this.getAttribute('block') && this.getAttribute('ready')
+// if !this.getAttribute('ready') nextField = undefined;
 
 
 
@@ -400,7 +457,7 @@ function removeSaved() {
  /* Function that generate gradient colors and set it on game field background */
 
 function getRandomGradient() {
-let getRgb = () => Math.floor(Math.random() * 255);
+let getRgb = () => Math.floor(Math.random() * 255.9);
 let bg = `linear-gradient(45deg, rgb(${getRgb()} ${getRgb()} ${getRgb()}), rgb(${getRgb()} ${getRgb()} ${getRgb()}))`;
 // document.querySelector('body').style.background = bg;document.querySelector('body').style.background = bg;
 document.querySelector('.container').style.background = bg;
@@ -408,4 +465,4 @@ document.querySelector('.container').style.background = bg;
 
 /* Call for func */
 
-getRandomGradient()
+//getRandomGradient()

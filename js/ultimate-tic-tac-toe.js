@@ -258,14 +258,23 @@ playeriX[blockNumber]['comb'].push(this.value);
 counter++;
 nextField = this.value;
 
-if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('ready') != 'false') {
-  document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.add('box-shadow');
-  container.classList.remove('box-shadow');
 
-  }
-  if (this.getAttribute('value') != this.getAttribute('block')) {
+if (nextField != undefined && document.querySelector(`[type="block"][value="${nextField}"]`).getAttribute('ready') != 'false') {
   document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
-   }
+  document.querySelector(`[type="block"][value="${nextField}"]`).classList.add('box-shadow');
+  container.classList.remove('box-shadow');
+}
+else document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
+
+// if (this.getAttribute('value') != this.getAttribute('block')) {
+//   document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
+//    }
+
+// if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('ready') != 'false') {
+//   document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.add('box-shadow');
+//   container.classList.remove('box-shadow');
+//   }
+
 
 console.log(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')));
 
@@ -275,12 +284,11 @@ console.log(+(document.querySelector(`[type="block"][value="${this.getAttribute(
     block.innerHTML = 'X';
     playeriX[blockNumber]['winner'] = true;
     playerX.push(+(blockNumber))
-    document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.remove('box-shadow');
-    
-    // if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value') == this.getAttribute('value')) {
-    // container.classList.add('box-shadow');
-    // }
-    
+
+    if (block.getAttribute('ready') == 'false') {
+      block.classList.remove('box-shadow');
+    }
+
   }
   if ([...playerO, ...playerX].includes(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')))) {
     nextField = undefined;
@@ -291,7 +299,7 @@ console.log(+(document.querySelector(`[type="block"][value="${this.getAttribute(
 
 /* Check O for possibilaty make a move and then check for win */
 
- else if ((counter % 2) && !winner && this.getAttribute('ready') == 'true'&& (nextField == blockNumber || firstMove) && !!block.getAttribute('ready')) {
+else if ((counter % 2) && !winner && this.getAttribute('ready') == 'true'&& (nextField == blockNumber || firstMove) && !!block.getAttribute('ready')) {
 firstMove = false;
 this.setAttribute('ready', 'false');
 this.innerHTML = 'O'
@@ -299,14 +307,14 @@ player0[blockNumber]['comb'].push(this.value)
 counter--
 nextField = this.value;
 
-if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('ready') != 'false') {
-  document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.add('box-shadow');
-  container.classList.remove('box-shadow');
-
-  }
-  if (this.getAttribute('value') != this.getAttribute('block')) {
+if (nextField != undefined && document.querySelector(`[type="block"][value="${nextField}"]`).getAttribute('ready') != 'false') {
   document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
-   }
+  document.querySelector(`[type="block"][value="${nextField}"]`).classList.add('box-shadow');
+  container.classList.remove('box-shadow');
+}
+else document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
+
+
 
 console.log(+block.getAttribute('value'));
 
@@ -317,20 +325,30 @@ console.log(+block.getAttribute('value'));
    block.innerHTML = 'O';
    player0[blockNumber]['winner'] = true;
    playerO.push(+(blockNumber))
-   document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.remove('box-shadow');
 
-
-  //  if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value') == this.getAttribute('value')) {
-  //   container.classList.add('box-shadow');
-  //   }
-
-
+   if (block.getAttribute('ready') == 'false') {
+    block.classList.remove('box-shadow');
+  }
   } 
   if ([...playerO, ...playerX].includes(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')))) {
     nextField = undefined;
-    firstMove = true;
+      firstMove = true;
     }
  }
+ let flag = 0;
+  for (let el of blocks) {
+   
+    if (el.classList.contains('box-shadow')) {
+    flag++;
+    }
+   
+  }
+
+  if (flag == 0) {
+    container.classList.add('box-shadow');
+  }
+  else container.classList.remove('box-shadow');
+
 }
 
 function checkForAvaliable () {

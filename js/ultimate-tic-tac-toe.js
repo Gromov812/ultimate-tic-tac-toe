@@ -276,10 +276,13 @@ console.log(+(document.querySelector(`[type="block"][value="${this.getAttribute(
     playeriX[blockNumber]['winner'] = true;
     playerX.push(+(blockNumber))
     document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.remove('box-shadow');
-    container.classList.add('box-shadow');
+    
+    // if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value') == this.getAttribute('value')) {
+    // container.classList.add('box-shadow');
+    // }
+    
   }
   if ([...playerO, ...playerX].includes(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')))) {
-    container.classList.add('box-shadow');
     nextField = undefined;
     firstMove = true;
    }
@@ -315,14 +318,17 @@ console.log(+block.getAttribute('value'));
    player0[blockNumber]['winner'] = true;
    playerO.push(+(blockNumber))
    document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.remove('box-shadow');
-   container.classList.add('box-shadow');
+
+
+  //  if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value') == this.getAttribute('value')) {
+  //   container.classList.add('box-shadow');
+  //   }
 
 
   } 
   if ([...playerO, ...playerX].includes(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')))) {
-    container.classList.add('box-shadow');
     nextField = undefined;
-      firstMove = true;
+    firstMove = true;
     }
  }
 }

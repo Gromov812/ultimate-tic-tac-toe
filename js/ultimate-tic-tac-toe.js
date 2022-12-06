@@ -253,7 +253,8 @@ function gamePlay() {
  if (!(counter % 2) && !winner && this.getAttribute('ready') == 'true' && (nextField == blockNumber || firstMove) && !!block.getAttribute('ready')) {
 firstMove = false;
 this.setAttribute('ready', 'false');
-this.innerHTML = 'X'
+this.innerHTML = 'X';
+result.innerHTML = 'Player O move now';
 playeriX[blockNumber]['comb'].push(this.value);
 counter++;
 nextField = this.value;
@@ -265,17 +266,7 @@ if (nextField != undefined && document.querySelector(`[type="block"][value="${ne
   container.classList.remove('box-shadow');
 }
 else document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
-
-// if (this.getAttribute('value') != this.getAttribute('block')) {
-//   document.querySelector(`[type="block"][value="${this.getAttribute('block')}"]`).classList.remove('box-shadow');
-//    }
-
-// if (document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('ready') != 'false') {
-//   document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).classList.add('box-shadow');
-//   container.classList.remove('box-shadow');
-//   }
-
-
+  
 console.log(+(document.querySelector(`[type="block"][value="${this.getAttribute('value')}"]`).getAttribute('value')));
 
 
@@ -303,6 +294,7 @@ else if ((counter % 2) && !winner && this.getAttribute('ready') == 'true'&& (nex
 firstMove = false;
 this.setAttribute('ready', 'false');
 this.innerHTML = 'O'
+result.innerHTML = 'Player X move now';
 player0[blockNumber]['comb'].push(this.value)
 counter--
 nextField = this.value;
@@ -377,12 +369,17 @@ saveGameButton.addEventListener('click', () => {
   // }
   data['zero'] = player0;
   data['iX'] = playeriX;
-
   data['moves'] = [playerX, playerO];
+  data['nextField'] = nextField;
+  data['firstMove'] = firstMove;
+
   let date = new Date;
   data['date'] = date.toLocaleString();
+
   data['score'] = score;
   data['counter'] = counter;
+
+  console.log(data);
   //data['check'] = check.checked;
   localStorage.setItem('data',JSON.stringify(data))
   document.querySelector('.saved--game').innerHTML = `Saved game ${data['date']} <div><a onclick="loadGame()">Load saved</a></div> <div><a onclick="removeSaved()">Remove saved</a></div>`;
@@ -391,34 +388,19 @@ saveGameButton.addEventListener('click', () => {
 /* Func that load already saved object 'data' from localStorage and pull variables */
 
 function loadGame() {
+
   let data = localStorage.getItem('data');
   data = JSON.parse(data);
-  for (let el of rows){
-    if (data['iX'][`${el.value}`]['winner']){
-      el.textContent = 'X'
-    }
-    if (data['zero'][`${el.value}`]['winner']){
-      el.textContent = 'O'
-    }
-    el.setAttribute('ready', false);
-  }
-  for (let el of cells) {
-    if (data['iX'][`${el.getAttribute('block')}`]['comb'].length != 0 && data['iX'][`${el.getAttribute('block')}`]['comb'].includes(el.value)) {
-      el.textContent = 'X';
-      el.setAttribute('ready', false);
 
-    }
-    if (data['zero'][`${el.getAttribute('block')}`]['comb'].length != 0 && data['zero'][`${el.getAttribute('block')}`]['comb'].includes(el.value)) {
-      el.textContent = 'O';
-      el.setAttribute('ready', false);
-    }
-  }
+  console.log(data);
   player0 = data['zero'];
   playeriX = data['iX'];
   playerX = data['moves'][0];
   playerO = data['moves'][1];
   score = data['score'];
   counter = data['counter'];
+  nextField = data['nextField'];
+  firstMove = data['firstMove'];
   //check.checked = data['check'];
   // switchText.innerHTML = check.checked ? 'P1 move first' : 'P2 move first';
   p1.innerHTML = `P1: ${score[0]}`
@@ -432,6 +414,34 @@ function loadGame() {
     result.innerHTML = 'Player 2 win!';
     winner = true;
   }
+
+  for (let el of rows){
+
+    if (data['iX'][`${el.value}`]['winner']){
+      el.textContent = 'X'
+    }
+
+    if (data['zero'][`${el.value}`]['winner']){
+      el.textContent = 'O'
+    }
+    el.setAttribute('ready', false);
+if (nextField != undefined) {
+  document.querySelector(`[type="block"][value="${nextField}"]`).classList.add('box-shadow');
+  container.classList.remove('box-shadow');
+}
+  }
+  for (let el of cells) {
+    if (data['iX'][`${el.getAttribute('block')}`]['comb'].length != 0 && data['iX'][`${el.getAttribute('block')}`]['comb'].includes(el.value)) {
+      el.textContent = 'X';
+      el.setAttribute('ready', false);
+
+    }
+    if (data['zero'][`${el.getAttribute('block')}`]['comb'].length != 0 && data['zero'][`${el.getAttribute('block')}`]['comb'].includes(el.value)) {
+      el.textContent = 'O';
+      el.setAttribute('ready', false);
+    }
+  }
+  
 }
 
 /* Func that erase any saved data called 'data' on localStorage*/

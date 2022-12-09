@@ -193,9 +193,14 @@ for (let el of block8) {
 
 container.addEventListener('click', checkForAWinner)
 
+
 function checkForAWinner() {
   if (compare(winCombs, playerO)) {
     result.innerHTML = 'Player 2 win!';
+    rows.forEach(el => {
+      if (el.classList.contains('box-shadow')) el.classList.remove('box-shadow')
+    })
+    container.classList.add('win-shadow');
     winner = true;
     score[1]++;
     p2.innerHTML = `P2: ${score[1]}`;
@@ -203,6 +208,10 @@ function checkForAWinner() {
   }
   else if(compare(winCombs, playerX)) {
     result.innerHTML = 'Player 1 win!';
+    rows.forEach(el => {
+      if (el.classList.contains('box-shadow')) el.classList.remove('box-shadow')
+    })
+    container.classList.add('win-shadow');
     winner = true;
     score[0]++;
     p1.innerHTML = `P1: ${score[0]}`;
